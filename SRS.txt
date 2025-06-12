@@ -1,0 +1,191 @@
+1. Introduction
+
+1.1 Purpose  
+This document outlines the software requirements for the Drawing Selling Website. The website will allow users to browse and purchase drawings online. Additionally, an Admin Dashboard will be developed with a modern, trendy design (not using Django’s default admin panel) to manage and view detailed information about total sales, drawings, users, and orders.
+
+1.2 Scope  
+The scope includes:
+- Browsing drawings.
+- Adding drawings to the cart.
+- A simple checkout process without user registration.
+- An Admin Dashboard featuring key metrics (Total Sales, Total Drawings, Total Users, Total Orders), each with clickable options for detailed views.
+- Admin email notifications for new orders.
+
+1.3 Definitions, Acronyms, and Abbreviations  
+- User: A customer who purchases drawings.
+- Admin: An individual responsible for managing orders and viewing site statistics.
+- Cart: Temporary storage for user-selected drawings.
+- Checkout: The process of confirming an order without requiring payment upfront (via call confirmation).
+- FontAwesome: A toolkit for styling icons and UI elements.
+
+---
+
+ 2. System Overview
+
+The system will:
+1. Allow users to browse, select, and purchase drawings.
+2. Provide a cart system for order review before checkout.
+3. Include an Admin Dashboard for order management, total sales tracking, and detailed metrics views.
+4. Trigger email notifications to the admin when an order is placed.
+
+The Admin Dashboard will include:
+- Total Sales
+- Total Drawings
+- Total Users
+- Total Orders  
+
+Each metric will be clickable, and upon clicking, detailed data related to that metric will be displayed.
+
+---
+
+ 3. Functional Requirements
+
+3.1 User Interface (UI)  
+
+- Homepage  
+  - Display featured drawings, categories, and a search bar for easy navigation.
+  - Clean, minimalistic design with FontAwesome for icons.
+
+- Product Gallery  
+  - Display drawings with title, description, and price.
+  - Users can add items to their cart directly from this page.
+
+- Cart  
+  - Users can review their selected items, remove them, and see a total price.
+  
+- Checkout  
+  - Users will enter shipping and contact information and schedule a payment confirmation call.
+
+- Order Confirmation  
+  - After submitting their order, users will see a confirmation page with a thank-you message and order summary.
+
+---
+
+3.2 Admin Dashboard
+
+- Admin Dashboard Overview  
+  The Admin Dashboard will display key metrics:
+  - Total Sales
+  - Total Drawings
+  - Total Users
+  - Total Orders
+
+  These metrics will be visually represented using cards that show the current totals and will be clickable.
+
+- Detailed Views  
+  Upon clicking any metric (e.g., Total Sales), the admin will be directed to a detailed page or section that shows:
+  - For Total Sales: A list of all completed transactions, including customer details and drawing purchased.
+  - For Total Drawings: A list of all available drawings, with their titles, descriptions, and prices.
+  - For Total Users: A list of all registered users, including their contact information.
+  - For Total Orders: A detailed breakdown of each order, including customer info, status, and order details.
+
+- Order Management  
+  Admins will have a view of all orders with the ability to mark orders as "Confirmed" once payment has been confirmed via call.
+
+- Email Notifications  
+  The admin will receive an email notification for every new order placed on the website. These notifications will include all the necessary details such as customer information and the items they purchased.
+
+---
+
+3.3 Email Notifications  
+- The system will send an email to the admin after each order is completed, containing customer details, the drawing purchased, and the order status.
+
+---
+
+ 4. Non-Functional Requirements
+
+4.1 Performance  
+- The website should handle multiple orders concurrently without significant performance degradation.
+- Average page load time should be under 3 seconds.
+
+4.2 Usability  
+- The Admin Dashboard UI should be intuitive and easy to navigate, offering clear visual metrics with clickable links for detailed information.
+- The admin should be able to quickly access specific data (e.g., sales, orders, users) through an interactive and modern UI.
+
+4.3 Security  
+- Ensure the use of HTTPS encryption to protect data during checkout.
+- Admin and user details should be stored securely, with proper handling of sensitive information.
+
+4.4 Compatibility  
+- The website will be responsive, supporting desktop and mobile devices.
+- Supported browsers include the latest versions of Chrome, Firefox, Safari, and Edge.
+
+---
+
+ 5. System Architecture
+
+1. Frontend (Client-Side)  
+   - The frontend will be developed using HTML, CSS, and JavaScript to create a modern and responsive UI.
+   - FontAwesome will be used for visual enhancements.
+   
+2. Backend (Server-Side)  
+   - Django will be used for the backend to handle the logic for managing orders, users, and product listings.
+   - The Django admin panel will not be used, and a custom Admin Dashboard will be implemented instead.
+
+3. Database  
+   - SQLite will be used to store product data, user orders, and admin details.
+   
+4. Email Service  
+   - An email service (SMTP with Gmail or Mailgun) will be used to send notifications to the admin upon new orders.
+
+---
+
+ 6. Technical Requirements
+
+6.1 Technologies
+- Frontend: HTML, CSS, JavaScript, FontAwesome.
+- Backend: Django (Python).
+- Database: SQLite for data storage.
+- Email Service: SMTP services like Gmail or Mailgun.
+
+---
+
+ 7. System Design
+
+7.1 Database Schema
+
+- Product Table:  
+  - Fields: ID (PK), Title, Description, Price, ImageURL.
+
+- Order Table:  
+  - Fields: ID (PK), CustomerName, CustomerEmail, CustomerPhone, ShippingAddress, ProductID (FK), OrderStatus.
+
+- OrderStatus Table (Optional):  
+  - Fields: StatusID (PK), OrderStatus (Pending, Confirmed, Shipped, etc.).
+
+7.2 Class Diagram  
+- Product Class: Handles product data.
+- Order Class: Manages order creation, status updates, and email notifications.
+
+---
+
+ 8. User Stories
+
+8.1 User Story 1: Browse and Add Drawings to Cart  
+- As a customer, I want to browse available drawings and add them to my cart so that I can review my selections before proceeding to checkout.
+
+8.2 User Story 2: Checkout and Confirm Order  
+- As a customer, I want to enter my contact and shipping information and schedule a call for payment confirmation to complete my purchase.
+
+8.3 User Story 3: Admin Receives Order Notification  
+- As an admin, I want to receive an email notification whenever a new order is placed, so I can review and confirm the order.
+
+---
+
+ 9. Assumptions and Constraints
+
+Assumptions  
+- Customers will provide accurate contact information.
+- Admins will manually confirm payment after the call.
+
+Constraints  
+- No direct payment processing will occur; confirmation is done via a phone call.
+
+---
+
+ 10. Glossary
+- Cart: A feature where users temporarily store items they wish to purchase.
+- Checkout: The process of confirming and finalizing an order.
+- Admin Dashboard: A custom backend interface for admins to manage orders and view statistics, without using the default Django admin panel.
+
+---

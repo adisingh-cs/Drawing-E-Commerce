@@ -1,0 +1,118 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Order Tracking - Drawing Store{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">Order #{{ order.id }}</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Order Details</h5>
+                            <p><strong>Date:</strong> {{ order.created_at|date:"F j, Y" }}</p>
+                            <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+                            <p><strong>Status:</strong> 
+                                <span class="badge {% if order.status == 'pending' %}bg-warning
+                                                 {% elif order.status == 'processing' %}bg-info
+                                                 {% elif order.status == 'shipped' %}bg-primary
+                                                 {% elif order.status == 'delivered' %}bg-success
+                                                 {% else %}bg-danger{% endif %}">
+                                    {{ order.status|title }}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Shipping Details</h5>
+                            <p><strong>Name:</strong> {{ order.customer_name }}</p>
+                            <p><strong>Email:</strong> {{ order.customer_email }}</p>
+                            <p><strong>Phone:</strong> {{ order.customer_phone }}</p>
+                            <p><strong>Address:</strong> {{ order.shipping_address }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Order Timeline</h5>
+                    <div class="timeline">
+                        {% for update in status_updates %}
+                        <div class="timeline-item">
+                            <div class="timeline-date">
+                                {{ update.created_at|date:"M j, Y g:i A" }}
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">{{ update.status|title }}</h6>
+                                {% if update.notes %}
+                                <p class="mb-0 text-muted">{{ update.notes }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            {% if order.status == 'pending' %}
+            <div class="text-center mt-4">
+                <form method="post" action="{% url 'cancel_order' order.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this order?')">
+                        Cancel Order
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding: 20px 0;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 20px;
+}
+
+.timeline-item:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item:after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #0d6efd;
+}
+
+.timeline-date {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+}
+</style>
+{% endblock %} 

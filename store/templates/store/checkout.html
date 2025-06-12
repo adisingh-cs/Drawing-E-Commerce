@@ -1,0 +1,77 @@
+{% extends 'store/base.html' %}
+{% load store_tags %}
+
+{% block title %}Checkout - Drawing Store{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="mb-4">Checkout</h1>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Order Summary</h5>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product_id, item in cart.items %}
+                            <tr>
+                                <td>{{ item.title }}</td>
+                                <td>₹{{ item.price }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>₹{{ item.price|multiply:item.quantity }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                <td><strong>₹{{ total }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Shipping Information</h5>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="customer_name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="customer_name" name="customer_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="customer_email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="customer_email" name="customer_email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="customer_phone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="customer_phone" name="customer_phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="shipping_address" class="form-label">Shipping Address</label>
+                        <textarea class="form-control" id="shipping_address" name="shipping_address" rows="3" required></textarea>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> After placing your order, we will contact you for payment confirmation.
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        Place Order <i class="fas fa-check"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

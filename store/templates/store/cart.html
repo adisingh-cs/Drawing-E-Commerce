@@ -1,0 +1,112 @@
+{% extends 'store/base.html' %}
+{% load store_tags %}
+
+{% block title %}Shopping Cart - Drawing Store{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Shopping Cart</h1>
+    
+    {% if cart %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product_id, item in cart.items %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if item.image_url %}
+                                            <img src="{{ item.image_url }}" alt="{{ item.title }}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                                            {% else %}
+                                            <div class="img-thumbnail me-2 d-flex align-items-center justify-content-center bg-light" style="width: 50px; height: 50px;">
+                                                <i class="fas fa-image text-muted"></i>
+                                            </div>
+                                            {% endif %}
+                                            <div>
+                                                <h6 class="mb-0">{{ item.title }}</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>₹{{ item.price }}</td>
+                                    <td>
+                                        <form method="post" action="{% url 'update_cart' product_id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <div class="input-group" style="width: 120px;">
+                                                <input type="number" name="quantity" class="form-control" value="{{ item.quantity }}" min="1">
+                                                <button type="submit" class="btn btn-outline-primary btn-sm">Update</button>
+                                            </div>
+                                        </form>
+                                    </td>
+                                    <td>₹{{ item.price|multiply:item.quantity }}</td>
+                                    <td>
+                                        <form method="post" action="{% url 'remove_from_cart' product_id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                    <td><strong>₹{{ total }}</strong></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Order Summary</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>₹{{ total }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping</span>
+                        <span>Free</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Total</strong>
+                        <strong>₹{{ total }}</strong>
+                    </div>
+                    <a href="{% url 'checkout' %}" class="btn btn-primary w-100">
+                        Proceed to Checkout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="card">
+        <div class="card-body text-center">
+            <h3>Your cart is empty</h3>
+            <p class="text-muted">Add some products to your cart and they will appear here.</p>
+            <a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

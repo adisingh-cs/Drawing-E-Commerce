@@ -1,0 +1,78 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Manage Inventory - Drawing Store{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Manage Inventory</h1>
+        <p class="lead">Update product stock levels</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Current Stock</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if product.image_url %}
+                                        <img src="{{ product.image_url }}" alt="{{ product.title }}" class="img-thumbnail me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                                        {% else %}
+                                        <i class="fas fa-image text-muted me-2"></i>
+                                        {% endif %}
+                                        <div>
+                                            <h6 class="mb-0">{{ product.title }}</h6>
+                                            <small class="text-muted">SKU: #{{ product.id }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <form method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                                        <div class="input-group" style="width: 120px;">
+                                            <input type="number" class="form-control" name="stock" value="{{ product.stock }}" min="0">
+                                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td>₹{{ product.price }}</td>
+                                <td>
+                                    {% if product.stock > 10 %}
+                                    <span class="badge bg-success">In Stock</span>
+                                    {% elif product.stock > 0 %}
+                                    <span class="badge bg-warning">Low Stock</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Out of Stock</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'manage_products' %}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
